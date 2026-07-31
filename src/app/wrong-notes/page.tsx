@@ -1,10 +1,15 @@
 import { listWrongNotes } from "@/lib/supabase/wrongNotes";
+import { createClient } from "@/lib/supabase/server";
 import WrongNotesClient from "@/components/WrongNotesClient";
+import LoginRequired from "@/components/LoginRequired";
 
 export const dynamic = "force-dynamic";
 
 export default async function WrongNotesPage() {
-  const notes = await listWrongNotes();
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   return (
     <div className="flex flex-col gap-8">
@@ -16,7 +21,11 @@ export default async function WrongNotesPage() {
         </p>
       </div>
 
-      <WrongNotesClient initialNotes={notes} />
+      {user ? (
+        <WrongNotesClient initialNotes={await listWrongNotes(supabase)} />
+      ) : (
+        <LoginRequired message="오답노트는 로그인 후 나만의 기록으로 관리됩니다." />
+      )}
     </div>
   );
 }

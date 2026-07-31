@@ -1,8 +1,10 @@
-import { supabase } from "./client";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { WrongNote } from "./types";
 
-export async function listWrongNotes(): Promise<WrongNote[]> {
-  const { data, error } = await supabase
+export async function listWrongNotes(
+  client: SupabaseClient
+): Promise<WrongNote[]> {
+  const { data, error } = await client
     .from("wrong_notes")
     .select("*")
     .order("created_at", { ascending: false });
@@ -12,13 +14,20 @@ export async function listWrongNotes(): Promise<WrongNote[]> {
 }
 
 export async function addWrongNote(
-  note: Omit<WrongNote, "id" | "created_at">
+  client: SupabaseClient,
+  note: Omit<WrongNote, "id" | "created_at" | "user_id">,
+  userId: string
 ): Promise<void> {
-  const { error } = await supabase.from("wrong_notes").insert(note);
+  const { error } = await client
+    .from("wrong_notes")
+    .insert({ ...note, user_id: userId });
   if (error) throw error;
 }
 
-export async function deleteWrongNote(id: string): Promise<void> {
-  const { error } = await supabase.from("wrong_notes").delete().eq("id", id);
+export async function deleteWrongNote(
+  client: SupabaseClient,
+  id: string
+): Promise<void> {
+  const { error } = await client.from("wrong_notes").delete().eq("id", id);
   if (error) throw error;
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Nav from "@/components/Nav";
+import { AuthProvider } from "@/components/AuthProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -30,13 +31,15 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Nav />
-        <main className="flex-1 w-full max-w-4xl mx-auto px-4 py-8">
-          {children}
-        </main>
-        <footer className="text-center text-xs text-foreground/50 py-6">
-          LawQuiz · 법 조문 OX 암기 학습 서비스
-        </footer>
+        <AuthProvider>
+          <Nav />
+          <main className="flex-1 w-full max-w-4xl mx-auto px-4 py-8">
+            {children}
+          </main>
+          <footer className="text-center text-xs text-foreground/50 py-6">
+            LawQuiz · 법 조문 OX 암기 학습 서비스
+          </footer>
+        </AuthProvider>
       </body>
     </html>
   );

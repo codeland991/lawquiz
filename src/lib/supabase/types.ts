@@ -4,6 +4,7 @@ export type Post = {
   content: string;
   views: number;
   created_at: string;
+  user_id: string | null;
 };
 
 export type WrongNote = {
@@ -18,4 +19,5 @@ export type WrongNote = {
   correct_answer: "O" | "X";
   correct_text: string;
   created_at: string;
+  user_id: string;
 };

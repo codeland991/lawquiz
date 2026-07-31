@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import AuthButton from "@/components/AuthButton";
 
 const LINKS = [
   { href: "/", label: "소개" },
@@ -15,11 +16,11 @@ export default function Nav() {
 
   return (
     <header className="border-b border-black/10 dark:border-white/10 sticky top-0 bg-[var(--background)]/90 backdrop-blur z-10">
-      <nav className="max-w-4xl mx-auto flex items-center justify-between px-4 py-3">
-        <Link href="/" className="font-bold text-lg tracking-tight">
+      <nav className="max-w-4xl mx-auto flex items-center justify-between px-4 py-3 gap-3">
+        <Link href="/" className="font-bold text-lg tracking-tight shrink-0">
           LawQuiz
         </Link>
-        <ul className="flex gap-1 sm:gap-2">
+        <ul className="flex gap-1 sm:gap-2 flex-1">
           {LINKS.map((link) => {
             const active =
               link.href === "/"
@@ -41,6 +42,7 @@ export default function Nav() {
             );
           })}
         </ul>
+        <AuthButton />
       </nav>
     </header>
   );

@@ -5,6 +5,8 @@ import Link from "next/link";
 import type { LawArticle } from "@/lib/lawData/seed";
 import { generateQuizSet, type Quiz } from "@/lib/quiz";
 import { addWrongNote } from "@/lib/supabase/wrongNotes";
+import { createClient } from "@/lib/supabase/client";
+import { useAuth } from "@/components/AuthProvider";
 
 const LAW_OPTIONS = ["전체", "민법", "형법", "근로기준법"];
 const QUESTION_COUNT = 8;
@@ -21,6 +23,7 @@ function formatRoundLabel(law: string) {
 }
 
 export default function QuizPage() {
+  const { user } = useAuth();
   const [stage, setStage] = useState<Stage>("select");
   const [selectedLaw, setSelectedLaw] = useState("전체");
   const [loading, setLoading] = useState(false);
@@ -83,19 +86,24 @@ export default function QuizPage() {
 
     if (isCorrect) {
       setScore((s) => s + 1);
-    } else {
+    } else if (user) {
       try {
-        await addWrongNote({
-          round_id: roundId,
-          round_label: roundLabel,
-          law: current.law,
-          article_no: current.articleNo,
-          article_title: current.articleTitle,
-          statement: current.statement,
-          user_answer: choice,
-          correct_answer: correctAnswer,
-          correct_text: current.originalText,
-        });
+        const supabase = createClient();
+        await addWrongNote(
+          supabase,
+          {
+            round_id: roundId,
+            round_label: roundLabel,
+            law: current.law,
+            article_no: current.articleNo,
+            article_title: current.articleTitle,
+            statement: current.statement,
+            user_answer: choice,
+            correct_answer: correctAnswer,
+            correct_text: current.originalText,
+          },
+          user.id
+        );
       } catch {
         // 오답 저장 실패는 학습 흐름을 막지 않도록 무시합니다.
       }
@@ -201,6 +209,12 @@ export default function QuizPage() {
         <p className="text-xs text-amber-600 bg-amber-50 dark:bg-amber-950/40 rounded-md px-3 py-2">
           국가법령정보센터 API 키(LAW_API_OC)가 설정되지 않아 샘플 조문
           데이터로 출제 중입니다.
+        </p>
+      )}
+
+      {!user && (
+        <p className="text-xs text-amber-600 bg-amber-50 dark:bg-amber-950/40 rounded-md px-3 py-2">
+          로그인하지 않으면 틀린 문제가 오답노트에 저장되지 않습니다.
         </p>
       )}
 

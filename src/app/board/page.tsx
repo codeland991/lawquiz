@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { listPosts } from "@/lib/supabase/posts";
+import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +13,8 @@ function formatDate(dateStr: string) {
 }
 
 export default async function BoardPage() {
-  const posts = await listPosts();
+  const supabase = await createClient();
+  const posts = await listPosts(supabase);
 
   return (
     <div className="flex flex-col gap-6">

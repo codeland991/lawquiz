@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { deleteWrongNote } from "@/lib/supabase/wrongNotes";
+import { createClient } from "@/lib/supabase/client";
 import type { WrongNote } from "@/lib/supabase/types";
 
 export default function WrongNotesClient({
@@ -22,7 +23,8 @@ export default function WrongNotesClient({
     setNotes((prev) => prev.filter((n) => n.id !== note.id));
     setError(null);
     try {
-      await deleteWrongNote(note.id);
+      const supabase = createClient();
+      await deleteWrongNote(supabase, note.id);
     } catch {
       setError("삭제 중 오류가 발생했습니다. 다시 시도해주세요.");
       setNotes(prevNotes);
