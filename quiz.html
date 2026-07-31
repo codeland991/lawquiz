@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>문제 풀기 - LawQuiz</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="quiz">
+<header class="site-header">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">⚖️ LawQuiz</a>
+    <nav class="nav-links">
+      <a href="index.html" data-page="home">소개</a>
+      <a href="quiz.html" data-page="quiz">문제 풀기</a>
+      <a href="wrong-notes.html" data-page="wrong">오답노트</a>
+      <a href="board.html" data-page="board">게시판</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <h2 class="section-title">OX 문제 풀기</h2>
+    <p class="section-desc">법령을 선택하고 제시된 조문이 맞는지(O) 틀린지(X) 골라보세요.</p>
+
+    <div class="quiz-toolbar">
+      <label for="law-select">법령 선택</label>
+      <select id="law-select">
+        <option value="전체">전체</option>
+      </select>
+      <span class="progress-line" id="progress-line"></span>
+    </div>
+
+    <div class="card quiz-card">
+      <div class="quiz-meta" id="quiz-meta"></div>
+      <div class="quiz-statement" id="quiz-statement"></div>
+
+      <div class="ox-buttons">
+        <button class="ox-btn o" id="btn-o" type="button">O</button>
+        <button class="ox-btn x" id="btn-x" type="button">X</button>
+      </div>
+
+      <div id="result-area"></div>
+
+      <div class="quiz-actions">
+        <button class="btn btn-secondary" id="btn-wrong-list" type="button">오답노트 보기</button>
+        <button class="btn btn-primary" id="btn-next" type="button" disabled>다음 문제 →</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">LawQuiz &mdash; 법 조문 암기 학습 서비스 (데모)</footer>
+
+<script src="js/data.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/common.js"></script>
+<script src="js/quiz.js"></script>
+</body>
+</html>

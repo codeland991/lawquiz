@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>자유게시판 - LawQuiz</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="board">
+<header class="site-header">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">⚖️ LawQuiz</a>
+    <nav class="nav-links">
+      <a href="index.html" data-page="home">소개</a>
+      <a href="quiz.html" data-page="quiz">문제 풀기</a>
+      <a href="wrong-notes.html" data-page="wrong">오답노트</a>
+      <a href="board.html" data-page="board">게시판</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <h2 class="section-title">자유게시판</h2>
+    <p class="section-desc">
+      학습하며 궁금한 점이나 정보를 자유롭게 나눠보세요. 제목을 클릭하면 내용이
+      바로 펼쳐집니다.
+    </p>
+
+    <div class="card board-write">
+      <div class="form-row">
+        <label for="post-title">제목</label>
+        <input type="text" id="post-title" placeholder="제목을 입력하세요" maxlength="100" />
+      </div>
+      <div class="form-row">
+        <label for="post-content">내용</label>
+        <textarea id="post-content" placeholder="내용을 입력하세요"></textarea>
+      </div>
+      <div class="board-write-actions">
+        <button class="btn btn-primary" id="btn-submit">등록</button>
+      </div>
+    </div>
+
+    <div class="board-list-head">
+      <span class="col-title">제목</span>
+      <span class="col-date">작성일시</span>
+      <span class="col-views">조회수</span>
+    </div>
+    <div id="post-list"></div>
+  </div>
+</main>
+
+<footer class="site-footer">LawQuiz &mdash; 법 조문 암기 학습 서비스 (데모)</footer>
+
+<script src="js/common.js"></script>
+<script src="js/board.js"></script>
+</body>
+</html>

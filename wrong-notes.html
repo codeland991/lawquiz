@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>오답노트 - LawQuiz</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="wrong">
+<header class="site-header">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">⚖️ LawQuiz</a>
+    <nav class="nav-links">
+      <a href="index.html" data-page="home">소개</a>
+      <a href="quiz.html" data-page="quiz">문제 풀기</a>
+      <a href="wrong-notes.html" data-page="wrong">오답노트</a>
+      <a href="board.html" data-page="board">게시판</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <h2 class="section-title">오답노트</h2>
+    <p class="section-desc">
+      회차별로 틀린 문제만 모아서 보여줍니다. 이해가 끝난 문제는 '이해 완료'
+      체크박스를 누르면 목록에서 사라집니다.
+    </p>
+
+    <div id="rounds-container"></div>
+  </div>
+</main>
+
+<footer class="site-footer">LawQuiz &mdash; 법 조문 암기 학습 서비스 (데모)</footer>
+
+<script src="js/storage.js"></script>
+<script src="js/common.js"></script>
+<script src="js/wrong-notes.js"></script>
+</body>
+</html>
