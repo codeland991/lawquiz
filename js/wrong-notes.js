@@ -17,8 +17,8 @@
     return Array.from(map.values()).sort((a, b) => b.roundId - a.roundId);
   }
 
-  function render() {
-    const notes = getWrongNotes();
+  async function render() {
+    const notes = await getWrongNotes();
 
     if (notes.length === 0) {
       container.innerHTML = `<div class="card empty-state">아직 저장된 오답이 없습니다.<br />문제를 풀고 틀리면 이곳에 자동으로 쌓입니다.</div>`;
@@ -57,9 +57,9 @@
     });
 
     container.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
-      cb.addEventListener("change", () => {
+      cb.addEventListener("change", async () => {
         if (cb.checked) {
-          removeWrongNote(cb.dataset.id);
+          await removeWrongNote(cb.dataset.id);
           render();
         }
       });

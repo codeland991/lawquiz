@@ -1,21 +1,19 @@
 (function () {
-  const POSTS_KEY = "lawquiz_board_posts";
-
   const titleInput = document.getElementById("post-title");
   const contentInput = document.getElementById("post-content");
   const submitBtn = document.getElementById("btn-submit");
   const listEl = document.getElementById("post-list");
 
-  function getPosts() {
-    try {
-      return JSON.parse(localStorage.getItem(POSTS_KEY)) || [];
-    } catch (e) {
+  async function getPosts() {
+    const { data, error } = await sb
+      .from("posts")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) {
+      console.error(error);
       return [];
     }
-  }
-
-  function savePosts(posts) {
-    localStorage.setItem(POSTS_KEY, JSON.stringify(posts));
+    return data;
   }
 
   function formatDate(ts) {
@@ -26,8 +24,8 @@
     )}:${pad(d.getMinutes())}`;
   }
 
-  function render() {
-    const posts = getPosts().sort((a, b) => b.createdAt - a.createdAt);
+  async function render() {
+    const posts = await getPosts();
 
     if (posts.length === 0) {
       listEl.innerHTML = `<div class="empty-state">등록된 게시글이 없습니다. 첫 글을 작성해보세요!</div>`;
@@ -41,17 +39,21 @@
       row.innerHTML = `
         <div class="post-row-head">
           <span class="col-title">${escapeHtml(post.title)}</span>
-          <span class="col-date">${formatDate(post.createdAt)}</span>
+          <span class="col-date">${formatDate(post.created_at)}</span>
           <span class="col-views">${post.views}</span>
         </div>
         <div class="post-row-body">${escapeHtml(post.content)}</div>
       `;
-      row.querySelector(".post-row-head").addEventListener("click", () => {
+      row.querySelector(".post-row-head").addEventListener("click", async () => {
         const isOpen = row.classList.contains("open");
         if (!isOpen) {
           post.views += 1;
-          savePosts(getPosts().map((p) => (p.id === post.id ? post : p)));
           row.querySelector(".col-views").textContent = post.views;
+          const { error } = await sb
+            .from("posts")
+            .update({ views: post.views })
+            .eq("id", post.id);
+          if (error) console.error(error);
         }
         row.classList.toggle("open");
       });
@@ -65,22 +67,19 @@
     return div.innerHTML;
   }
 
-  submitBtn.addEventListener("click", () => {
+  submitBtn.addEventListener("click", async () => {
     const title = titleInput.value.trim();
     const content = contentInput.value.trim();
     if (!title || !content) {
       alert("제목과 내용을 모두 입력해주세요.");
       return;
     }
-    const posts = getPosts();
-    posts.push({
-      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      title,
-      content,
-      createdAt: Date.now(),
-      views: 0,
-    });
-    savePosts(posts);
+    const { error } = await sb.from("posts").insert({ title, content });
+    if (error) {
+      console.error(error);
+      alert("게시글 등록에 실패했습니다.");
+      return;
+    }
     titleInput.value = "";
     contentInput.value = "";
     render();

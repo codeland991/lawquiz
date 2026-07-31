@@ -96,7 +96,6 @@
     if (!isCorrect) {
       const round = getCurrentRound();
       addWrongNote({
-        id: makeId(),
         roundId: round.id,
         roundLabel: round.label,
         law: current.article.law,
@@ -106,7 +105,6 @@
         userAnswer: selected,
         correctAnswer,
         correctText: current.article.correctText,
-        timestamp: Date.now(),
       });
     }
 

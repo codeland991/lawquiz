@@ -1,30 +1,49 @@
-// 오답노트 localStorage 공용 유틸 (quiz.js, wrong-notes.js 에서 공통 사용)
+// 오답노트 Supabase 연동 공용 유틸 (quiz.js, wrong-notes.js 에서 공통 사용)
 
-const WRONG_NOTES_KEY = "lawquiz_wrong_notes";
 const ROUND_ID_KEY = "lawquiz_round_id";
 const ROUND_LABEL_KEY = "lawquiz_round_label";
 
-function getWrongNotes() {
-  try {
-    return JSON.parse(localStorage.getItem(WRONG_NOTES_KEY)) || [];
-  } catch (e) {
+async function getWrongNotes() {
+  const { data, error } = await sb
+    .from("wrong_notes")
+    .select("*")
+    .order("created_at", { ascending: true });
+  if (error) {
+    console.error(error);
     return [];
   }
+  return data.map((row) => ({
+    id: row.id,
+    roundId: row.round_id,
+    roundLabel: row.round_label,
+    law: row.law,
+    articleNo: row.article_no,
+    articleTitle: row.article_title,
+    statement: row.statement,
+    userAnswer: row.user_answer,
+    correctAnswer: row.correct_answer,
+    correctText: row.correct_text,
+  }));
 }
 
-function saveWrongNotes(list) {
-  localStorage.setItem(WRONG_NOTES_KEY, JSON.stringify(list));
+async function addWrongNote(item) {
+  const { error } = await sb.from("wrong_notes").insert({
+    round_id: item.roundId,
+    round_label: item.roundLabel,
+    law: item.law,
+    article_no: item.articleNo,
+    article_title: item.articleTitle,
+    statement: item.statement,
+    user_answer: item.userAnswer,
+    correct_answer: item.correctAnswer,
+    correct_text: item.correctText,
+  });
+  if (error) console.error(error);
 }
 
-function addWrongNote(item) {
-  const list = getWrongNotes();
-  list.push(item);
-  saveWrongNotes(list);
-}
-
-function removeWrongNote(id) {
-  const list = getWrongNotes().filter((item) => item.id !== id);
-  saveWrongNotes(list);
+async function removeWrongNote(id) {
+  const { error } = await sb.from("wrong_notes").delete().eq("id", id);
+  if (error) console.error(error);
 }
 
 // 현재 학습 회차(round)를 가져오거나, 없으면 새로 시작한다.
@@ -47,8 +66,4 @@ function formatRoundLabel(date) {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
     date.getDate()
   )} ${pad(date.getHours())}:${pad(date.getMinutes())} 회차`;
-}
-
-function makeId() {
-  return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
